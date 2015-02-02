@@ -2,16 +2,17 @@
 
 Powered by [c9s/CLIFramework](https://github.com/c9s/CLIFramework)
 
-## Features
+## Integration
 
-* Gulp integration
-* Document generation
-* 
+* [Gulp](http://gulpjs.com/)
+* [Bower](http://bower.io/)
+* [Hologram](http://trulia.github.io/hologram/)
+* [Apidoc](http://apidocjs.com/)
 
 ## Installation
 
 ```bash
-wget https://raw.githubusercontent.com/jaceju/clitool-boilerplate/master/bin/craftsman
+wget https://raw.githubusercontent.com/jaceju/craftsman/master/bin/craftsman
 chmod +x craftsman
 mv craftsman /usr/local/bin
 ```
@@ -25,7 +26,7 @@ craftsman zsh --bind craftsman > ~/.zsh/craftsman
 Then add these lines to your `.zshrc` file:
 
 ```
-source ~/.zsh/craftsman 
+source ~/.zsh/craftsman
 ```
 
 ## License
