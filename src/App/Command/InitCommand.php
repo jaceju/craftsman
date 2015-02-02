@@ -48,9 +48,10 @@ class InitCommand extends Command
 
         $templateDir = __DIR__ . '/../../templates';
 
-        $this->copy($templateDir . '/tasks', $path . '/tasks');
         $this->copy($templateDir . '/root', $path);
-        @copy($templateDir . '/config/config.' . $type . '.js', $path . '/tasks');
+        $this->copy($templateDir . '/app', $path . '/app');
+        $this->copy($templateDir . '/tasks', $path . '/tasks');
+        copy($templateDir . '/config/config.' . $type . '.js', $path . '/tasks/config.js');
 
         $this->rename($path . '/bowerrc', '.bowerrc');
         $this->rename($path . '/jshintrc', '.jshintrc');
@@ -66,7 +67,19 @@ class InitCommand extends Command
                 break;
         }
 
+        $logger->writeln($this->getFormatter()->format('Initialize...', 'green'));
+        chdir($path);
+        exec('sh < build.sh');
+
         $logger->writeln('Done!');
+        $logger->newline();
+        $logger->writeln('Insert these lines to your template files, I can\'t do this for you:');
+        $logger->newline();
+
+        $initMessage = file_get_contents(__DIR__ . '/../../messages/init.txt');
+        $logger->info($this->getFormatter()->format($initMessage, 'yellow'));
+
+        $logger->writeln('You can run `gulp` to build or `gulp watch` for development.');
 
         return $type;
     }

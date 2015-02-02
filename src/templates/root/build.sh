@@ -11,6 +11,9 @@ fi
 
 if [ -n "$NPM" ]; then
     ${NPM} prune && ${NPM} install
-    ${BOWER} install
-    ${GULP}
+    ${BOWER} prune && ${BOWER} install
+    UG=`echo "$USE_GULP" | awk '{ print tolower($1) }'`
+    if [ "${UG}" = "yes" ]; then
+        ${GULP}
+    fi
 fi
