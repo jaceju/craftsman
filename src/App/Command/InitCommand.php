@@ -36,8 +36,6 @@ class InitCommand extends Command
 
         if (null === $path) {
             $path = getcwd();
-        } else {
-            $path = realpath($path);
         }
 
         if (null === $type) {
@@ -48,7 +46,7 @@ class InitCommand extends Command
             ]);
         }
 
-        $templateDir = realpath(__DIR__ . '/../../templates');
+        $templateDir = __DIR__ . '/../../templates';
 
         $this->copy($templateDir . '/tasks', $path . '/tasks');
         $this->copy($templateDir . '/root', $path);
