@@ -11,42 +11,88 @@ class InitCommand extends Command
         return 'Initialize your project for development.';
     }
 
-    public function init()
+    public function options($opts)
     {
-        parent::init();
-        // register your subcommand here ..
-    }
+        parent::options($opts);
 
-    // public function options($opts)
-    // {
-    //     $opts->add('assets-dir:', 'assets path of project.')
-    //         ->isa('string')
-    //         ->valueName('path');
-    //     $opts->add('public-dir:', 'document root path of project.')
-    //         ->isa('string')
-    //         ->valueName('path');
-    // }
+        $opts->add('path?', 'Specify path of project.')
+            ->isa('string');
+    }
 
     public function arguments($args)
     {
+        $args->add('path')
+            ->isa('string');
+
         $args->add('type')
             ->isa('string')
             ->validValues([null, 'laravel4', 'laravel5', 'custom']);
     }
 
-    public function execute($type = null)
+    public function execute($path = null, $type = null)
     {
-        $this->logger->notice('executing bar command.');
-        $this->logger->info('info message');
-        $this->logger->debug('info message');
-        $this->logger->write('just write');
-        $this->logger->writeln('just drop a line');
-        $this->logger->newline();
+        $logger = $this->getLogger();
+        /* @var \CLIFramework\Logger $logger */
 
-        if (null === $type) {
-            $input = $this->ask('Chose your project type:');
+        if (null === $path) {
+            $path = getcwd();
+        } else {
+            $path = realpath($path);
         }
 
+        if (null === $type) {
+            $type = $this->choose('Chose your project type:', [
+                'laravel4' => 'laravel4',
+                'laravel5' => 'laravel5',
+                'custom' => 'custom',
+            ]);
+        }
+
+        $templateDir = realpath(__DIR__ . '/../../templates');
+
+        $this->copy($templateDir . '/tasks', $path . '/tasks');
+        $this->copy($templateDir . '/root', $path);
+        @copy($templateDir . '/config/config.' . $type . '.js', $path . '/tasks');
+
+        $this->rename($path . '/bowerrc', '.bowerrc');
+        $this->rename($path . '/jshintrc', '.jshintrc');
+        $this->rename($path . '/tasks/config.' . $type . '.js', 'config.js');
+
+        switch ($type) {
+            case 'laravel5':
+                $this->copy($templateDir . '/assets', $path . '/resources/assets');
+                break;
+            case 'laravel4':
+            default:
+                $this->copy($templateDir . '/assets', $path . '/assets');
+                break;
+        }
+
+        $logger->writeln('Done!');
+
         return $type;
+    }
+
+    public function copy($source, $dest)
+    {
+        @mkdir($dest, 0755);
+        foreach (
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::SELF_FIRST
+            ) as $item
+        ) {
+            if ($item->isDir()) {
+                @mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            } else {
+                @copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            }
+        }
+    }
+
+    public function rename($source, $newName)
+    {
+        $fullName = dirname($source) . '/' . $newName;
+        @rename($source, $fullName);
     }
 }
