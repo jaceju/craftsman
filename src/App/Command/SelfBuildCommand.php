@@ -95,14 +95,7 @@ class SelfBuildCommand extends Command
 
     protected function replaceApplicationVersion($newVersion)
     {
-        $pattern = '/^\s+const VERSION = \'(' . self::SEMVER_PATTERN . ')\'\s*;$/m';
-        $appFile = $this->baseDir . '/src/App/Application.php';
-
-        $content = file_get_contents($appFile);
-        $replace = '    const VERSION = \'' . $newVersion . '\';';
-
-        $content = preg_replace($pattern, $replace, $content);
-        file_put_contents($appFile, $content);
+        exec('git tag ' . $newVersion);
     }
 
     protected function updateVersion($version)
