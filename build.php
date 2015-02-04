@@ -1,6 +1,7 @@
 <?php
 
 require __DIR__ . '/vendor/autoload.php';
+declare(ticks = 1);
 
 use App\Application;
 use App\JsonFile;
@@ -25,8 +26,11 @@ class Build
 
     protected $newVersion = '0.0.0';
 
-    public function __construct()
+    protected static $debug = false;
+
+    public function __construct($debug = false)
     {
+        self::$debug = $debug;
         $this->appName = strtolower(Application::NAME);
         $this->baseDir = getcwd();
         $this->composer = new JsonFile($this->baseDir . '/composer.json');
@@ -34,9 +38,45 @@ class Build
         $this->manifest = new JsonFile($this->baseDir . '/build/manifest.json', true);
     }
 
+    protected static function exec($cmd, $hide = true, &$output = null)
+    {
+        $hide = $hide && !self::$debug;
+        $cmd .= $hide ? ' &> /dev/null' : '';
+        return exec($cmd, $output);
+    }
+
+    protected function getLatestVersion()
+    {
+        $versions = [];
+        self::exec('git tag -l', false, $versions);
+        usort($versions, 'version_compare');
+        $version = array_pop($versions);
+        return trim($version);
+    }
+
+    protected function getHashByTag($tag)
+    {
+        if (empty($tag)) { return ''; }
+        $hashes = [];
+        self::exec('git rev-list ' . $tag  . ' | head -n 1', false, $hashes);
+        $hash = array_pop($hashes);
+        return trim($hash);
+    }
+
+    protected function getLatestCommitHash()
+    {
+        return exec('git log --format="%H" -n 1');
+    }
+
     protected function ensureOldSemver()
     {
-        $version = trim(exec('git tag -l'));
+        $version = $this->getLatestVersion();
+        $oldHash = $this->getHashByTag($version);
+        $latestHash = $this->getLatestCommitHash();
+
+        if ($oldHash === $latestHash) {
+            return false;
+        }
 
         if ($version !== '' && !$this->checkSemver($version)) {
             throw new \Exception('Latest version does not match semantic version.');
@@ -53,6 +93,8 @@ class Build
             'minor' => $minor,
             'patch' => $patch,
         ];
+
+        return true;
     }
 
     protected function checkSemver($version)
@@ -79,7 +121,7 @@ class Build
         }
 
         $this->newVersion = $this->getNewVersionFrom($version);
-        exec('git tag ' . $this->newVersion);
+        self::exec('git tag ' . $this->newVersion);
     }
 
     protected function updateRepository()
@@ -115,13 +157,13 @@ class Build
 
         if (!file_exists('.git')) {
             $gitUrl = sprintf('git@github.com:%s.git', Application::REPOSITORY);
-            exec('git init');
-            exec('git remote add origin ' . $gitUrl);
+            self::exec('git init');
+            self::exec('git remote add origin ' . $gitUrl);
         }
 
-        $result = @exec('git checkout gh-pages');
+        $result = self::exec('git checkout gh-pages');
         if ('' === $result) {
-            exec('git checkout -b gh-pages');
+            self::exec('git checkout -b gh-pages');
         }
     }
 
@@ -131,57 +173,53 @@ class Build
         $buildFile = $this->getFullPharPath();
 
         if (file_exists($buildFile)) {
-            @unlink($buildFile);
+            unlink($buildFile);
+            sleep(3);
         }
 
-        @mkdir(dirname($buildFile));
-        exec('./box.phar build');
-
+        if (!file_exists(dirname($buildFile))) {
+            mkdir(dirname($buildFile));
+        }
+        self::exec('./box.phar build');
         copy($buildFile, $this->getFullPharPath($this->newVersion));
-    }
-
-    protected function updateManifest()
-    {
-        if (null === $this->manifest->info) {
-            $this->manifest->info = [];
-        }
-
-        $buildFile = $this->getFullPharPath($this->newVersion);
-
-        list($vendor, $repository) = explode('/', Application::REPOSITORY);
-        $url = sprintf('http://%s.github.io/%s/downloads/%s', $vendor, $repository, basename($buildFile));
-
-        $manifest = [
-            'name' => basename($buildFile),
-            'sha1' => sha1_file($buildFile),
-            'url'  => $url,
-            'version' => $this->newVersion,
-        ];
-
-        $this->manifest->info[] = $manifest;
-        $this->manifest->save();
     }
 
     protected function publishGhPages()
     {
         $buildDir = $this->baseDir . '/build';
         chdir($buildDir);
-        exec('git add .');
-        exec('git commit -m "Build ' . $this->newVersion . '"');
-        exec('git push -u origin gh-pages');
-        echo 'Version ' . $this->newVersion . ' be published.', PHP_EOL;
+        self::exec('git add .');
+        self::exec('git commit -m "Build ' . $this->newVersion . '"');
+        self::exec('git push -u origin gh-pages');
+        echo PHP_EOL, 'Version ' . $this->newVersion . ' be published :)', PHP_EOL;
     }
 
     public function execute($version = null)
     {
-        $this->ensureOldSemver();
-        $this->updateVersion($version);
-        $this->updateRepository();
-        $this->updateAppBin();
-        $this->initGhPages();
-        $this->buildPhar();
-        $this->updateManifest();
-        $this->publishGhPages();
+        if ($this->ensureOldSemver()) {
+            register_tick_function([$this, 'progress']);
+            $this->updateVersion($version);
+            $this->updateRepository();
+            $this->updateAppBin();
+            $this->initGhPages();
+            $this->buildPhar();
+            $this->publishGhPages();
+        } else {
+            echo 'Nothing to do :(' . PHP_EOL;
+        }
+    }
+
+    public function progress()
+    {
+        static $start;
+
+        if (empty($start)) { $start = microtime(true); }
+        $now = microtime(true);
+
+        if (!self::$debug && ($now - $start > 0.0001)) {
+            echo '.';
+        }
+        $start = $now;
     }
 }
 
