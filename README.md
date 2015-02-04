@@ -27,6 +27,13 @@ Initialize project first:
 craftsman init [project-folder]
 ```
 
+or:
+
+```bash
+cd project-folder
+craftsman init
+```
+
 then you can run `gulp` to build or `gulp watch` for development.
 
 ## Zsh auto-completion
