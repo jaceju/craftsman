@@ -3,14 +3,11 @@
     "directories": [
         "src"
     ],
-    "files": [
-        "vendor/herrera-io/phar-update/res/schema.json"
-    ],
     "finder": [
         {
             "name": "*.php",
             "exclude": [
-                "Tests"
+                "tests"
             ],
             "in": "vendor"
         }
