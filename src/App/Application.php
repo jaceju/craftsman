@@ -8,6 +8,7 @@ class Application extends CliApp
 {
     const NAME = 'Craftsman';
     const VERSION = '@package_version@';
+    const REPOSITORY = 'jaceju/clitool-boilerplate';
 
     public function options($opts)
     {
@@ -18,6 +19,6 @@ class Application extends CliApp
     {
         parent::init();
         $this->command('init');
-        $this->command('self-build');
+        $this->command('self-update');
     }
 }
