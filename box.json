@@ -3,6 +3,9 @@
     "directories": [
         "src"
     ],
+    "files": [
+        "vendor/herrera-io/phar-update/res/schema.json"
+    ],
     "finder": [
         {
             "name": "*.php",
@@ -14,6 +17,6 @@
     ],
     "git-version": "package_version",
     "main": "src/bootstrap.php",
-    "output": "bin/craftsman.phar",
+    "output": "build/downloads/craftsman.phar",
     "stub": true
 }
