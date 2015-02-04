@@ -1,6 +1,8 @@
 # Craftsman
 
-Powered by [c9s/CLIFramework](https://github.com/c9s/CLIFramework)
+Enhance your laravel project with bower, gulp, etc. 
+
+Powered by [jaceju/clitool-boilerplate](https://github.com/jaceju/clitool-boilerplate)
 
 ## Integration
 
@@ -12,10 +14,20 @@ Powered by [c9s/CLIFramework](https://github.com/c9s/CLIFramework)
 ## Installation
 
 ```bash
-wget https://raw.githubusercontent.com/jaceju/craftsman/master/bin/craftsman
-chmod +x craftsman
-mv craftsman /usr/local/bin
+curl -L -O https://jaceju.github.io/craftsman/downloads/craftsman.phar
+chmod +x craftsman.phar
+mv craftsman.phar /usr/local/bin/craftsman
 ```
+
+## Usage
+
+Initialize project first:
+
+```bash
+craftsman init [project-folder]
+```
+
+then you can run `gulp` to build or `gulp watch` for development.
 
 ## Zsh auto-completion
 
