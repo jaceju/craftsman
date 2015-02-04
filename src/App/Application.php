@@ -8,7 +8,7 @@ class Application extends CliApp
 {
     const NAME = 'Craftsman';
     const VERSION = '@package_version@';
-    const REPOSITORY = 'jaceju/clitool-boilerplate';
+    const REPOSITORY = 'jaceju/craftsman';
 
     public function options($opts)
     {
