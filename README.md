@@ -40,7 +40,7 @@ laravel new project-name
 Then initialize the project:
 
 ```bash
-craftsman init [project-name]
+craftsman init project-name
 ```
 
 or:
