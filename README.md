@@ -26,12 +26,18 @@ Powered by [jaceju/clitool-boilerplate](https://github.com/jaceju/clitool-boiler
 ```bash
 curl -L -O https://jaceju.github.io/craftsman/downloads/craftsman.phar
 chmod +x craftsman.phar
-mv craftsman.phar /usr/local/bin/craftsman
+sudo mv craftsman.phar /usr/local/bin/craftsman
 ```
 
 ## Usage
 
-Initialize project first:
+Create a Laravel project first:
+
+```bash
+laravel new [project-folder]
+```
+
+Then initialize the project:
 
 ```bash
 craftsman init [project-folder]
