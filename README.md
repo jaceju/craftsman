@@ -11,6 +11,16 @@ Powered by [jaceju/clitool-boilerplate](https://github.com/jaceju/clitool-boiler
 * [Hologram](http://trulia.github.io/hologram/)
 * [Apidoc](http://apidocjs.com/)
 
+## Requirement
+
+* Linux or OS X
+* PHP 5.4+
+* Ruby 1.9.3+
+* Gem Bundle 1.7.0+
+* Node 0.10.0+
+* npm 2.0.0+
+* Composer 1.0+
+
 ## Installation
 
 ```bash
