@@ -3,9 +3,19 @@
 namespace App\Command;
 
 use CLIFramework\Command;
+use CLIFramework\Prompter;
+use App\JsonFile;
 
 class InitCommand extends Command
 {
+
+    public function ask($prompt, $validAnswers = null, $default = null)
+    {
+        $prompter = new Prompter;
+        $prompter->setStyle('ask');
+        return $prompter->ask($prompt, $validAnswers, $default);
+    }
+
     public function brief()
     {
         return 'Initialize your project for development.';
@@ -23,10 +33,6 @@ class InitCommand extends Command
     {
         $args->add('path')
             ->isa('string');
-
-        $args->add('type')
-            ->isa('string')
-            ->validValues([null, 'laravel4', 'laravel5', 'custom']);
     }
 
     protected function checkTool($name, $info)
@@ -87,7 +93,58 @@ class InitCommand extends Command
         return $status;
     }
 
-    public function execute($path = null, $type = null)
+    protected function getLaravelVersion($path)
+    {
+        $composer = new JsonFile($path . '/composer.json');
+
+        $version = isset($composer->info->{"require"}->{"laravel/framework"})
+                ? $composer->info->{"require"}->{"laravel/framework"}
+                : null;
+
+        if (!empty($version)) {
+            $version = substr($version, 0, 1);
+        }
+
+        return $version;
+    }
+
+    protected function guessLaravelVersion($path)
+    {
+        $version = $this->getLaravelVersion($path);
+
+        if (null === $version) {
+            return null;
+        }
+
+        $checkList = [
+            '4' => [
+                '/app/routes.php',
+                '/app/config/app.php',
+            ],
+            '5' => [
+                '/app/Http/routes.php',
+                '/config/app.php',
+            ],
+        ];
+
+        $exists = true;
+        foreach ($checkList[$version] as $file) {
+            $exists = $exists && file_exists($path . $file);
+        }
+
+        return $exists ? $version : null;
+    }
+
+    protected function chooseProjectType()
+    {
+        return $this->choose('What is your project type?', [
+            'Laravel 4' => 'laravel4',
+            'Laravel 5' => 'laravel5',
+            'Custom' => 'custom',
+        ]);
+    }
+
+    public function execute($path = null)
     {
         $this->logger->info('Checking environment...');
 
@@ -96,18 +153,23 @@ class InitCommand extends Command
             return false;
         }
 
-        /* @var \CLIFramework\Logger $this->logger */
-
         if (null === $path) {
             $path = getcwd();
         }
 
-        if (null === $type) {
-            $type = $this->choose('Chose your project type:', [
-                'laravel4' => 'laravel4',
-                'laravel5' => 'laravel5',
-                'custom' => 'custom',
-            ]);
+        $version = $this->guessLaravelVersion($path);
+        if (null !== $version) {
+            $msg = 'I guess this project is based on Laravel ';
+            $msg .= $version . ', am I right?';
+            $ans = $this->ask($msg, ['y', 'n'], 'y');
+
+            if ('n' === $ans) {
+                $type = $this->chooseProjectType();
+            } else {
+                $type = 'laravel' . $version;
+            }
+        } else {
+            $type = $this->chooseProjectType();
         }
 
         $templateDir = __DIR__ . '/../../templates';
@@ -115,19 +177,22 @@ class InitCommand extends Command
         $this->copy($templateDir . '/root', $path);
         $this->copy($templateDir . '/app', $path . '/app');
         $this->copy($templateDir . '/tasks', $path . '/tasks');
-        copy($templateDir . '/config/config.' . $type . '.js', $path . '/tasks/config.js');
+        copy($templateDir . '/config/config.' . $version . '.js', $path . '/tasks/config.js');
 
         $this->rename($path . '/bowerrc', '.bowerrc');
         $this->rename($path . '/jshintrc', '.jshintrc');
-        $this->rename($path . '/tasks/config.' . $type . '.js', 'config.js');
+        $this->rename($path . '/tasks/config.' . $version . '.js', 'config.js');
 
         switch ($type) {
             case 'laravel5':
+                $this->rename($path . '/resources/views', 'templates');
                 $this->copy($templateDir . '/assets', $path . '/resources/assets');
                 break;
             case 'laravel4':
-            default:
+                $this->rename($path . '/app/views', 'templates');
                 $this->copy($templateDir . '/assets', $path . '/assets');
+                break;
+            default:
                 break;
         }
 
@@ -135,9 +200,9 @@ class InitCommand extends Command
         chdir($path);
         exec('sh < build.sh');
 
-        $this->logger->writeln('Done!');
+        $this->logger->writeln('Done! :D');
         $this->logger->newline();
-        $this->logger->writeln('Insert these lines to your template files, I can\'t do this for you:');
+        $this->logger->writeln('Insert these lines to your template files, I can\'t do this for you: :/');
         $this->logger->newline();
 
         $initMessage = file_get_contents(__DIR__ . '/../../messages/init.txt');
@@ -145,7 +210,7 @@ class InitCommand extends Command
 
         $this->logger->writeln('You can run `gulp` to build or `gulp watch` for development.');
 
-        return $type;
+        return $version;
     }
 
     public function copy($source, $dest)
