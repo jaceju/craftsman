@@ -34,19 +34,19 @@ sudo mv craftsman.phar /usr/local/bin/craftsman
 Create a Laravel project first:
 
 ```bash
-laravel new [project-folder]
+laravel new project-name
 ```
 
 Then initialize the project:
 
 ```bash
-craftsman init [project-folder]
+craftsman init [project-name]
 ```
 
 or:
 
 ```bash
-cd project-folder
+cd project-name
 craftsman init
 ```
 
