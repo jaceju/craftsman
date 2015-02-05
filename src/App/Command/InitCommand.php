@@ -96,8 +96,7 @@ class InitCommand extends Command
             return false;
         }
 
-        $logger = $this->getLogger();
-        /* @var \CLIFramework\Logger $logger */
+        /* @var \CLIFramework\Logger $this->logger */
 
         if (null === $path) {
             $path = getcwd();
@@ -132,19 +131,19 @@ class InitCommand extends Command
                 break;
         }
 
-        $logger->writeln($this->getFormatter()->format('Initialize...', 'green'));
+        $this->logger->writeln($this->getFormatter()->format('Initialize...', 'green'));
         chdir($path);
         exec('sh < build.sh');
 
-        $logger->writeln('Done!');
-        $logger->newline();
-        $logger->writeln('Insert these lines to your template files, I can\'t do this for you:');
-        $logger->newline();
+        $this->logger->writeln('Done!');
+        $this->logger->newline();
+        $this->logger->writeln('Insert these lines to your template files, I can\'t do this for you:');
+        $this->logger->newline();
 
         $initMessage = file_get_contents(__DIR__ . '/../../messages/init.txt');
-        $logger->info($this->getFormatter()->format($initMessage, 'yellow'));
+        $this->logger->info($this->getFormatter()->format($initMessage, 'yellow'));
 
-        $logger->writeln('You can run `gulp` to build or `gulp watch` for development.');
+        $this->logger->writeln('You can run `gulp` to build or `gulp watch` for development.');
 
         return $type;
     }
