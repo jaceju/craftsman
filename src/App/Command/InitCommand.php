@@ -184,6 +184,7 @@ class InitCommand extends Command
         $this->copy($templateDir . '/app', $path . '/app');
         $this->copy($templateDir . '/tasks', $path . '/tasks');
         copy($templateDir . '/config/config.' . $type . '.js', $path . '/tasks/config.js');
+        copy($templateDir . '/config/gitignore.' . $type, $path . '/.gitignore');
 
         $this->rename($path . '/bowerrc', '.bowerrc');
         $this->rename($path . '/jshintrc', '.jshintrc');
