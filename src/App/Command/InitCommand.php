@@ -40,20 +40,26 @@ class InitCommand extends Command
         $cmd = $info['cmd'];
         $pattern = $info['pattern'];
         $minVersion = $info['minVersion'];
+        $version = '(not installed)';
 
         $tool = exec($cmd);
 
         if ('' === $tool) {
-            $status = $this->formatter->format('✗', 'red');
             $result = false;
         } else {
-            $status = $this->formatter->format('✓', 'green');
 
             $matches = [];
             preg_match("#$pattern#", $tool, $matches);
             $version = isset($matches[1]) ? $matches[1] : '';
-            $result = (bool) version_compare($version, $minVersion, '>=');
+            $result = version_compare($version, $minVersion, '>=');
+
+            if (!$result) {
+                $version .= ' (require ' . $minVersion . '+)';
+            }
         }
+
+        $status = $result ? $this->formatter->format('✓', 'green')
+                          : $this->formatter->format('✗', 'red');
 
         $this->logger->info("$status $name $version");
 
@@ -81,7 +87,7 @@ class InitCommand extends Command
             'npm' => [
                 'cmd' => 'which npm && npm --version',
                 'pattern' => '([\d\.]+)$',
-                'minVersion' => '2.2.0',
+                'minVersion' => '2.0.0',
             ],
         ];
 
@@ -177,11 +183,11 @@ class InitCommand extends Command
         $this->copy($templateDir . '/root', $path);
         $this->copy($templateDir . '/app', $path . '/app');
         $this->copy($templateDir . '/tasks', $path . '/tasks');
-        copy($templateDir . '/config/config.' . $version . '.js', $path . '/tasks/config.js');
+        copy($templateDir . '/config/config.' . $type . '.js', $path . '/tasks/config.js');
 
         $this->rename($path . '/bowerrc', '.bowerrc');
         $this->rename($path . '/jshintrc', '.jshintrc');
-        $this->rename($path . '/tasks/config.' . $version . '.js', 'config.js');
+        $this->rename($path . '/tasks/config.' . $type . '.js', 'config.js');
 
         switch ($type) {
             case 'laravel5':
