@@ -29,8 +29,73 @@ class InitCommand extends Command
             ->validValues([null, 'laravel4', 'laravel5', 'custom']);
     }
 
+    protected function checkTool($name, $info)
+    {
+        $cmd = $info['cmd'];
+        $pattern = $info['pattern'];
+        $minVersion = $info['minVersion'];
+
+        $tool = exec($cmd);
+
+        if ('' === $tool) {
+            $status = $this->formatter->format('✗', 'red');
+            $result = false;
+        } else {
+            $status = $this->formatter->format('✓', 'green');
+
+            $matches = [];
+            preg_match("#$pattern#", $tool, $matches);
+            $version = isset($matches[1]) ? $matches[1] : '';
+            $result = (bool) version_compare($version, $minVersion, '>=');
+        }
+
+        $this->logger->info("$status $name $version");
+
+        return $result;
+    }
+
+    protected function checkEnv()
+    {
+        $tools = [
+            'Ruby' => [
+                'cmd' => 'which ruby && ruby --version',
+                'pattern' => '^ruby ([\d\.]+).*$',
+                'minVersion' => '1.9.3',
+            ],
+            'Gem Bundle' => [
+                'cmd' => 'which bundle && bundle --version',
+                'pattern' => '([\d\.]+)$',
+                'minVersion' => '1.7.0',
+            ],
+            'Node' => [
+                'cmd' => 'which node && node --version',
+                'pattern' => '([\d\.]+)$',
+                'minVersion' => '0.10.2',
+            ],
+            'npm' => [
+                'cmd' => 'which npm && npm --version',
+                'pattern' => '([\d\.]+)$',
+                'minVersion' => '2.2.0',
+            ],
+        ];
+
+        $status = true;
+        foreach ($tools as $name => $info) {
+            $status = $status && $this->checkTool($name, $info);
+        }
+
+        return $status;
+    }
+
     public function execute($path = null, $type = null)
     {
+        $this->logger->info('Checking environment...');
+
+        if (!$this->checkEnv()) {
+            $this->logger->info('Sorry, I can not initial the project. :(');
+            return false;
+        }
+
         $logger = $this->getLogger();
         /* @var \CLIFramework\Logger $logger */
 
