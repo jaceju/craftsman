@@ -192,11 +192,11 @@ class InitCommand extends Command
 
         switch ($type) {
             case 'laravel5':
-                $this->rename($path . '/resources/views', 'templates');
+                $this->copy($path . '/resources/views', $path . '/resources/templates');
                 $this->copy($templateDir . '/assets', $path . '/resources/assets');
                 break;
             case 'laravel4':
-                $this->rename($path . '/app/views', 'templates');
+                $this->copy($path . '/app/views', $path . '/app/templates');
                 $this->copy($templateDir . '/assets', $path . '/assets');
                 break;
             default:
