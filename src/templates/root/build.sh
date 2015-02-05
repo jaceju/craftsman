@@ -3,6 +3,8 @@ BUNDLE=$(which bundle)
 NPM=$(which npm)
 BOWER="./node_modules/bower/bin/bower"
 GULP="./node_modules/gulp/bin/gulp.js"
+COMPOSER=$(which composer)
+PHP=$(which php)
 
 if [ -n "$BUNDLE" ]; then
     ${BUNDLE} install --path=.bundle
@@ -16,4 +18,9 @@ if [ -n "$NPM" ]; then
     if [ "${UG}" = "yes" ]; then
         ${GULP}
     fi
+fi
+
+if [ -n "$COMPOSER" ]; then
+    ${COMPOSER} install
+    ${PHP} artisan key:generate
 fi

@@ -43,6 +43,7 @@ class InitCommand extends Command
         $version = '(not installed)';
 
         $tool = exec($cmd);
+        $tool = preg_replace('#' . "\033" . '\[\d+m#', '', $tool);
 
         if ('' === $tool) {
             $result = false;
@@ -50,6 +51,7 @@ class InitCommand extends Command
 
             $matches = [];
             preg_match("#$pattern#", $tool, $matches);
+
             $version = isset($matches[1]) ? $matches[1] : '';
             $result = version_compare($version, $minVersion, '>=');
 
@@ -89,6 +91,11 @@ class InitCommand extends Command
                 'pattern' => '([\d\.]+)$',
                 'minVersion' => '2.0.0',
             ],
+            'Composer' => [
+                'cmd' => 'which composer && composer --version',
+                'pattern' => ' ([\d\.]+)',
+                'minVersion' => '1.0',
+            ]
         ];
 
         $status = true;
