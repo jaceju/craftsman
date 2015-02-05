@@ -17,7 +17,7 @@ gulp.task('wiredep', function() {
 
     var tplDeps = gulp.src(config.templateSrcFiles)
         .pipe(wiredep({
-            ignorePath: '../../public',
+            ignorePath: /(\.\.\/)*public/,
             exclude: ['modernizr']
         }))
         .pipe(gulp.dest(config.viewDir));

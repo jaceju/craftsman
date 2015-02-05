@@ -1,15 +1,15 @@
-<!-- build:css css/vendor.css -->
+<!-- build:css /css/vendor.css -->
 <!-- bower:css -->
 <!-- endbower -->
 <!-- endbuid -->
-<!-- build:css css/main.css -->
-<link rel="stylesheet" href="styles/main.css">
+<!-- build:css /css/main.css -->
+<link rel="stylesheet" href="/styles/main.css">
 <!-- endbuild -->
 
-<!-- build:js js/vendor.js -->
+<!-- build:js /js/vendor.js -->
 <!-- bower:js -->
 <!-- endbower -->
 <!-- endbuid -->
-<!-- build:js js/index.js -->
-<script src="scripts/index.js"></script>
+<!-- build:js /js/index.js -->
+<script src="/scripts/index.js"></script>
 <!-- endbuid -->
