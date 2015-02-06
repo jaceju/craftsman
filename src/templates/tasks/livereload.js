@@ -8,9 +8,9 @@ var config = require('./config');
 gulp.task('livereload', function () {
     var server = $.livereload;
     server.listen();
-    gulp.watch([
+    $.watch([
         config.viewDir + '/**/*',
         config.publicDir + '/**/*',
         '!' + config.bowerDir + '/**/*',
-    ]).on('change', server.changed);
+    ], server.changed);
 });

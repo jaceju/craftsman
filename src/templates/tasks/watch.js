@@ -8,9 +8,19 @@ var config = require('./config');
 gulp.task('watch', ['prepare'], function() {
     gulp.start('serve');
     gulp.start('livereload');
-    gulp.watch([config.templateSrcFiles, 'bower.json'], ['wiredep']);
-    gulp.watch(config.appFiles, ['phpunit']);
-    gulp.watch(config.scriptSrcFiles, ['scripts']);
-    gulp.watch(config.styleSrcFiles, ['styles']);
-    gulp.watch(config.imageSrcDir + '/**/*', ['images']);
+    $.watch([config.templateSrcFiles, 'bower.json'], function () {
+        gulp.start('wiredep');
+    });
+    $.watch(config.appFiles, function () {
+        gulp.start('phpunit');
+    });
+    $.watch(config.scriptSrcFiles, function () {
+        gulp.start('scripts');
+    });
+    $.watch(config.styleSrcFiles, function () {
+        gulp.start('styles');
+    });
+    $.watch(config.imageSrcDir + '/**/*', function () {
+        gulp.start('images');
+    });
 });
