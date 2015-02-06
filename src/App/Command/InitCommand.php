@@ -98,12 +98,25 @@ class InitCommand extends Command
             ]
         ];
 
+        $this->logger->info('Checking environment...');
         $status = true;
         foreach ($tools as $name => $info) {
             $status = $status && $this->checkTool($name, $info);
         }
 
+        if (!$status) {
+            $this->logger->info('Sorry, I can not initial the project. :(');
+        }
+
         return $status;
+    }
+
+    protected function getProjectPath($path)
+    {
+        if (null === $path) {
+            $path = getcwd();
+        }
+        return $path;
     }
 
     protected function getLaravelVersion($path)
@@ -157,20 +170,8 @@ class InitCommand extends Command
         ]);
     }
 
-    public function execute($path = null)
+    protected function getProjectType($version)
     {
-        $this->logger->info('Checking environment...');
-
-        if (!$this->checkEnv()) {
-            $this->logger->info('Sorry, I can not initial the project. :(');
-            return false;
-        }
-
-        if (null === $path) {
-            $path = getcwd();
-        }
-
-        $version = $this->guessLaravelVersion($path);
         if (null !== $version) {
             $msg = 'I guess this project is based on Laravel ';
             $msg .= $version . ', am I right?';
@@ -184,7 +185,11 @@ class InitCommand extends Command
         } else {
             $type = $this->chooseProjectType();
         }
+        return $type;
+    }
 
+    protected function generateFiles($path, $type)
+    {
         $templateDir = __DIR__ . '/../../templates';
 
         $this->copy($templateDir . '/root', $path);
@@ -209,20 +214,40 @@ class InitCommand extends Command
             default:
                 break;
         }
+    }
 
+    protected function runBuild($path)
+    {
         $this->logger->writeln($this->getFormatter()->format('Initialize...', 'green'));
         chdir($path);
         exec('sh < build.sh');
-
         $this->logger->writeln('Done! :D');
+    }
+
+    protected function showFinalMessage()
+    {
         $this->logger->newline();
         $this->logger->writeln('Insert these lines to your template files, I can\'t do this for you: :/');
         $this->logger->newline();
 
         $initMessage = file_get_contents(__DIR__ . '/../../messages/init.txt');
-        $this->logger->info($this->getFormatter()->format($initMessage, 'yellow'));
+        $this->logger->info($this->formatter->format($initMessage, 'yellow'));
 
         $this->logger->writeln('You can run `gulp` to build or `gulp watch` for development.');
+    }
+
+    public function execute($path = null)
+    {
+        if (!$this->checkEnv()) {
+            return false;
+        }
+
+        $path = $this->getProjectPath($path);
+        $version = $this->guessLaravelVersion($path);
+        $type = $this->getProjectType($version);
+        $this->generateFiles($path, $type);
+        $this->runBuild($path);
+        $this->showFinalMessage();
 
         return $version;
     }
