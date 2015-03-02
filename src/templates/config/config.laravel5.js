@@ -9,6 +9,7 @@ var config = new function () {
     // Back-end
     this.appDir = 'app';
     this.appFiles = 'app/**/*.php';
+    this.appTestFiles = 'tests/**/*.php';
     this.templateDir = 'resources/templates';
     this.templateExt = '.php';
     this.viewDir = 'resources/views';

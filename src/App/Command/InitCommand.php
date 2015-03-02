@@ -4,7 +4,7 @@ namespace App\Command;
 
 use CLIFramework\Command;
 use CLIFramework\Prompter;
-use App\File\Json as JsonFile;
+use App\Filesystem\Json as JsonFile;
 
 class InitCommand extends Command
 {

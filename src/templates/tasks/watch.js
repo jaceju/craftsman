@@ -11,7 +11,7 @@ gulp.task('watch', ['prepare'], function() {
     $.watch([config.templateSrcFiles, 'bower.json'], function () {
         gulp.start('wiredep');
     });
-    $.watch(config.appFiles, function () {
+    $.watch([config.appFiles, config.appTestFiles], function () {
         gulp.start('phpunit');
     });
     $.watch(config.scriptSrcFiles, function () {
