@@ -7,6 +7,6 @@ var runSequence = require('run-sequence');
 gulp.task('prepare', function (cb) {
     runSequence(
         'clean:develop',
-        ['wiredep', 'styles', 'scripts', 'images', 'fonts'],
+        ['wiredep', 'sass', 'jshint', 'images', 'fonts'],
     cb);
 });

@@ -8,13 +8,13 @@ var config = new function () {
 
     // Back-end
     this.appDir = 'app';
-    this.appFiles = ['app/models/**/*.php', 'app/controllers/*.php'];
-    this.templateDir = 'app/templates';
+    this.appFiles = 'app/**/*.php';
+    this.templateDir = 'resources/templates';
     this.templateExt = '.php';
-    this.viewDir = 'app/views';
+    this.viewDir = 'resources/views';
 
     // Front-end
-    this.assetsDir = 'assets';
+    this.assetsDir = 'resources/assets';
     this.bowerDir = 'public/bower_components';
     this.publicDir = 'public';
     this.styleExt = '.scss';
@@ -25,8 +25,8 @@ var config = new function () {
     this.apiDocDir = 'docs/api';
 
     // Compiled
-    this.scriptDestDir = 'public/scripts';
-    this.styleDestDir = 'public/styles';
+    this.scriptDestDir = 'public/js';
+    this.styleDestDir = 'public/css';
 
     // Built
     this.scriptBuildDir = 'public/js';
@@ -35,8 +35,8 @@ var config = new function () {
     this.fontBuildDir = 'public/fonts';
 
     // Source
-    this.scriptSrcDir = this.assetsDir + '/scripts';
-    this.styleSrcDir = this.assetsDir + '/styles';
+    this.scriptSrcDir = this.assetsDir + '/js';
+    this.styleSrcDir = this.assetsDir + '/sass';
     this.fontSrcDir = this.assetsDir + '/fonts';
     this.imageSrcDir = this.assetsDir + '/images';
     this.scriptSrcFiles = this.scriptSrcDir + '/**/*.js';

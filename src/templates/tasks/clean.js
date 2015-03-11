@@ -37,8 +37,6 @@ gulp.task('clean:temporary', function (cb) {
     del([
         config.viewDir + '/js',
         config.viewDir + '/css',
-        config.scriptDestDir,
-        config.styleDestDir,
         config.styleCacheDir
     ], cb);
 });

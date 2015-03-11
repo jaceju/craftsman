@@ -5,7 +5,7 @@ var $ = require('gulp-load-plugins')();
 var config = require('./config');
 
 // Build
-gulp.task('build', ['wiredep', 'styles', 'scripts', 'images', 'fonts'], function() {
+gulp.task('build', ['wiredep', 'sass', 'jshint', 'images', 'fonts'], function() {
 
     var saveLicense = require('uglify-save-license');
     var assets = $.useref.assets({ searchPath: 'public' });

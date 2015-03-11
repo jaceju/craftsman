@@ -15,10 +15,10 @@ gulp.task('watch', ['prepare'], function() {
         gulp.start('phpunit');
     });
     $.watch(config.scriptSrcFiles, function () {
-        gulp.start('scripts');
+        gulp.start('jshint');
     });
     $.watch(config.styleSrcFiles, function () {
-        gulp.start('styles');
+        gulp.start('sass');
     });
     $.watch(config.imageSrcDir + '/**/*', function () {
         gulp.start('images');
