@@ -54,18 +54,6 @@ craftsman init
 
 then you can run `gulp` to build or `gulp watch` for development.
 
-## Zsh auto-completion
-
-```bash
-craftsman zsh --bind craftsman > ~/.zsh/craftsman
-```
-
-Then add these lines to your `.zshrc` file:
-
-```
-source ~/.zsh/craftsman
-```
-
 ## License
 
 MIT
