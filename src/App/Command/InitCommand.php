@@ -5,6 +5,7 @@ namespace App\Command;
 use CLIFramework\Command;
 use CLIFramework\Prompter;
 use App\Filesystem\Json as JsonFile;
+use Exception;
 
 class InitCommand extends Command
 {
@@ -134,31 +135,25 @@ class InitCommand extends Command
         return $version;
     }
 
-    protected function guessLaravelVersion($path)
+    protected function isLaravel5($path)
     {
         $version = $this->getLaravelVersion($path);
 
         if (null === $version) {
-            return null;
+            return false;
         }
 
         $checkList = [
-            '4' => [
-                '/app/routes.php',
-                '/app/config/app.php',
-            ],
-            '5' => [
-                '/app/Http/routes.php',
-                '/config/app.php',
-            ],
+            '/app/Http/routes.php',
+            '/config/app.php',
         ];
 
         $exists = true;
-        foreach ($checkList[$version] as $file) {
+        foreach ($checkList as $file) {
             $exists = $exists && file_exists($path . $file);
         }
 
-        return $exists ? $version : null;
+        return $exists;
     }
 
     protected function chooseProjectType()
@@ -172,7 +167,7 @@ class InitCommand extends Command
 
     protected function getProjectType($version)
     {
-        if (null !== $version) {
+        if (null === $version) {
             $msg = 'I guess this project is based on Laravel ';
             $msg .= $version . ', am I right?';
             $ans = $this->ask($msg, ['y', 'n'], 'y');
@@ -188,32 +183,20 @@ class InitCommand extends Command
         return $type;
     }
 
-    protected function generateFiles($path, $type)
+    protected function generateFiles($path)
     {
         $templateDir = __DIR__ . '/../../templates';
 
         $this->copy($templateDir . '/root', $path);
         $this->copy($templateDir . '/app', $path . '/app');
         $this->copy($templateDir . '/tasks', $path . '/tasks');
-        copy($templateDir . '/config/config.' . $type . '.js', $path . '/tasks/config.js');
-        copy($templateDir . '/config/gitignore.' . $type, $path . '/.gitignore');
 
         $this->rename($path . '/bowerrc', '.bowerrc');
         $this->rename($path . '/jshintrc', '.jshintrc');
-        $this->rename($path . '/tasks/config.' . $type . '.js', 'config.js');
+        $this->rename($path . '/gitignore', '.gitignore');
 
-        switch ($type) {
-            case 'laravel5':
-                $this->copy($path . '/resources/views', $path . '/resources/templates');
-                $this->copy($templateDir . '/assets', $path . '/resources/assets');
-                break;
-            case 'laravel4':
-                $this->copy($path . '/app/views', $path . '/app/templates');
-                $this->copy($templateDir . '/assets', $path . '/assets');
-                break;
-            default:
-                break;
-        }
+        $this->copy($path . '/resources/views', $path . '/resources/templates');
+        $this->copy($templateDir . '/assets', $path . '/resources/assets');
     }
 
     protected function runBuild($path)
@@ -243,13 +226,14 @@ class InitCommand extends Command
         }
 
         $path = $this->getProjectPath($path);
-        $version = $this->guessLaravelVersion($path);
-        $type = $this->getProjectType($version);
-        $this->generateFiles($path, $type);
+        if (!$this->isLaravel5($path)) {
+            throw new Exception('It is not a project of Laravel 5.');
+        }
+        $this->generateFiles($path);
         $this->runBuild($path);
         $this->showFinalMessage();
 
-        return $version;
+        return true;
     }
 
     public function copy($source, $dest)

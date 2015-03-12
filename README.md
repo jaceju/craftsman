@@ -1,6 +1,8 @@
 # Craftsman
 
-Enhance your laravel project with bower, gulp, etc. 
+Enhance your Laravel 5 project with bower, gulp, etc.
+
+It is replacement for the elixir.
 
 Powered by [jaceju/clitool-boilerplate](https://github.com/jaceju/clitool-boilerplate)
 
