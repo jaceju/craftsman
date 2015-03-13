@@ -13,6 +13,6 @@ gulp.task('images', function() {
             progressive: true,
             interlaced: true
         })))
-        .pipe(gulp.dest(config.imageBuildDir))
+        .pipe(gulp.dest(config.imageDestDir))
         .pipe($.size({ title: 'images' }));
 });

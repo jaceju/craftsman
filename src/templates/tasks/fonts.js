@@ -11,6 +11,6 @@ gulp.task('fonts', function () {
             config.bowerDir + '/**/fonts/**/*.{otf,eot,svg,ttf,woff}'
         ])
         .pipe($.flatten())
-        .pipe(gulp.dest(config.fontBuildDir))
+        .pipe(gulp.dest(config.fontDestDir))
         .pipe($.size({ title: 'fonts' }));
 });

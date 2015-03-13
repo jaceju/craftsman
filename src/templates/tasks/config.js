@@ -28,12 +28,8 @@ var config = new function () {
     // Compiled
     this.scriptDestDir = 'public/js';
     this.styleDestDir = 'public/css';
-
-    // Built
-    this.scriptBuildDir = 'public/js';
-    this.styleBuildDir = 'public/css';
-    this.imageBuildDir = 'public/images';
-    this.fontBuildDir = 'public/fonts';
+    this.imageDestDir = 'public/images';
+    this.fontDestDir = 'public/fonts';
 
     // Source
     this.scriptSrcDir = this.assetsDir + '/js';

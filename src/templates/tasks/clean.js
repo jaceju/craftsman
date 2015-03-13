@@ -23,10 +23,10 @@ gulp.task('clean:cache', function (cb) {
 // Clean
 gulp.task('clean', ['clean:develop', 'clean:cache'], function(cb) {
     del([
-        config.scriptBuildDir,
-        config.styleBuildDir,
-        config.imageBuildDir,
-        config.fontBuildDir,
+        config.scriptDestDir,
+        config.styleDestDir,
+        config.imageDestDir,
+        config.fontDestDir,
         config.styleGuideDir,
         config.apiDocDir
     ], cb);
