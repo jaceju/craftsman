@@ -1,15 +1,32 @@
 'use strict';
 
 var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var browserSync = require('browser-sync');
+var config = require('./config');
 
 // Start Web server
 gulp.task('serve', function () {
-    var spawn = require('child_process').spawn,
-        child = spawn('php', [ 'artisan', 'serve' ], { cwd: process.cwd() }),
-        log = function (data) { console.log(data.toString()); },
-        kill = function () { child.kill(); }
-    child.stdout.on('data', log);
-    child.stderr.on('data', log);
-    process.on('exit', kill);
-    process.on('uncaughtException', kill);
+
+    if (config.proxy) {
+        browserSync({
+            proxy: config.proxy
+        });
+    } else {
+        $.connectPhp.server({
+            base: 'public',
+            port: config.port,
+            router: '../server.php'
+        }, function () {
+            browserSync({
+                proxy: 'localhost:' + config.port
+            });
+        });
+    }
+
+    $.watch([
+        config.viewDir + '/**/*',
+        config.publicDir + '/**/*',
+        '!' + config.bowerDir + '/**/*',
+    ], browserSync.reload);
 });

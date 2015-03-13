@@ -7,7 +7,7 @@ var config = require('./config');
 // Watch
 gulp.task('watch', ['prepare'], function() {
     gulp.start('serve');
-    gulp.start('livereload');
+
     $.watch([config.templateSrcFiles, 'bower.json'], function () {
         gulp.start('wiredep');
     });

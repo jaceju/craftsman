@@ -6,6 +6,10 @@ var config = new function () {
     // Environment
     this.useBundle = fs.existsSync('.bundle');
 
+    // Server
+    this.proxy = 'dev.pikachu'; // proxy for browser-sync
+    this.port = 8888;
+
     // Back-end
     this.appDir = 'app';
     this.appFiles = 'app/**/*.php';
