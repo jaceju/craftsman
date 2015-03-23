@@ -156,46 +156,17 @@ class InitCommand extends Command
         return $exists;
     }
 
-    protected function chooseProjectType()
-    {
-        return $this->choose('What is your project type?', [
-            'Laravel 4' => 'laravel4',
-            'Laravel 5' => 'laravel5',
-            'Custom' => 'custom',
-        ]);
-    }
-
-    protected function getProjectType($version)
-    {
-        if (null === $version) {
-            $msg = 'I guess this project is based on Laravel ';
-            $msg .= $version . ', am I right?';
-            $ans = $this->ask($msg, ['y', 'n'], 'y');
-
-            if ('n' === $ans) {
-                $type = $this->chooseProjectType();
-            } else {
-                $type = 'laravel' . $version;
-            }
-        } else {
-            $type = $this->chooseProjectType();
-        }
-        return $type;
-    }
-
     protected function generateFiles($path)
     {
         $templateDir = __DIR__ . '/../../templates';
 
         $this->copy($templateDir . '/root', $path);
         $this->copy($templateDir . '/app', $path . '/app');
-        $this->copy($templateDir . '/tasks', $path . '/tasks');
 
         $this->rename($path . '/bowerrc', '.bowerrc');
         $this->rename($path . '/jshintrc', '.jshintrc');
         $this->rename($path . '/gitignore', '.gitignore');
 
-        $this->copy($path . '/resources/views', $path . '/resources/templates');
         $this->copy($templateDir . '/assets', $path . '/resources/assets');
     }
 
@@ -216,7 +187,7 @@ class InitCommand extends Command
         $initMessage = file_get_contents(__DIR__ . '/../../messages/init.txt');
         $this->logger->info($this->formatter->format($initMessage, 'yellow'));
 
-        $this->logger->writeln('You can run `gulp` to build or `gulp watch` for development.');
+        $this->logger->writeln('You can run `gulp` for development or `gulp --production` to build.');
     }
 
     public function execute($path = null)
