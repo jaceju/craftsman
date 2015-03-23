@@ -1,2 +1,2 @@
 #!/bin/sh
-cd demo5 && git clean -xfd && git reset --hard HEAD && cd -
+cd demo5 && git reset --hard HEAD && git clean -fdx && cd -
