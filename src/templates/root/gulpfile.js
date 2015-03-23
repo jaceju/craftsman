@@ -16,6 +16,7 @@ elixir(function (mix) {
     mix.clean()
         .sass('*.scss')
         .jshint()
+        //.twig() // for prototype
         .wiredep();
 
     if (elixir.config.production) {

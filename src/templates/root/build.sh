@@ -21,6 +21,7 @@ if [ -n "$NPM" ]; then
 fi
 
 if [ -n "$COMPOSER" ]; then
+    ${COMPOSER} require "codeception/codeception:*" --dev --no-update
     ${COMPOSER} install
     ${PHP} artisan key:generate
 fi

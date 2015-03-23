@@ -2,15 +2,17 @@
   "private": true,
   "devDependencies": {
     "bower": "~1.3.0",
-    "gulp": "~3.0",
+    "gulp": "~3.8.0",
     "laravel-elixir": "*",
     "laravel-elixir-apidoc": "*",
     "laravel-elixir-browser-sync": "*",
     "laravel-elixir-clean": "*",
     "laravel-elixir-codeception": "*",
     "laravel-elixir-serve": "*",
+    "laravel-elixir-jshint": "*",
     "laravel-elixir-style-guide": "*",
     "laravel-elixir-useref": "*",
+    "laravel-elixir-twig": "*",
     "laravel-elixir-wiredep": "*"
   }
 }
