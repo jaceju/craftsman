@@ -9,7 +9,12 @@ use Exception;
 
 class InitCommand extends Command
 {
-
+    /**
+     * @param string $prompt
+     * @param null $validAnswers
+     * @param null $default
+     * @return null|string
+     */
     public function ask($prompt, $validAnswers = null, $default = null)
     {
         $prompter = new Prompter;
@@ -17,11 +22,17 @@ class InitCommand extends Command
         return $prompter->ask($prompt, $validAnswers, $default);
     }
 
+    /**
+     * @return string
+     */
     public function brief()
     {
         return 'Initialize your project for development.';
     }
 
+    /**
+     * @param $opts
+     */
     public function options($opts)
     {
         parent::options($opts);
@@ -30,12 +41,20 @@ class InitCommand extends Command
             ->isa('string');
     }
 
+    /**
+     * @param $args
+     */
     public function arguments($args)
     {
         $args->add('path')
             ->isa('string');
     }
 
+    /**
+     * @param $name
+     * @param $info
+     * @return bool|mixed
+     */
     protected function checkTool($name, $info)
     {
         $cmd = $info['cmd'];
@@ -69,6 +88,9 @@ class InitCommand extends Command
         return $result;
     }
 
+    /**
+     * @return bool
+     */
     protected function checkEnv()
     {
         $tools = [
@@ -112,6 +134,10 @@ class InitCommand extends Command
         return $status;
     }
 
+    /**
+     * @param $path
+     * @return string
+     */
     protected function getProjectPath($path)
     {
         if (null === $path) {
@@ -120,6 +146,10 @@ class InitCommand extends Command
         return $path;
     }
 
+    /**
+     * @param $path
+     * @return null|string
+     */
     protected function getLaravelVersion($path)
     {
         $composer = new JsonFile($path . '/composer.json');
@@ -135,6 +165,10 @@ class InitCommand extends Command
         return $version;
     }
 
+    /**
+     * @param $path
+     * @return bool
+     */
     protected function isLaravel5($path)
     {
         $version = $this->getLaravelVersion($path);
@@ -156,6 +190,9 @@ class InitCommand extends Command
         return $exists;
     }
 
+    /**
+     * @param $path
+     */
     protected function generateFiles($path)
     {
         $templateDir = __DIR__ . '/../../templates';
@@ -170,6 +207,9 @@ class InitCommand extends Command
         $this->copy($templateDir . '/assets', $path . '/resources/assets');
     }
 
+    /**
+     * @param $path
+     */
     protected function runBuild($path)
     {
         $this->logger->writeln($this->getFormatter()->format('Initialize...', 'green'));
@@ -178,6 +218,9 @@ class InitCommand extends Command
         $this->logger->writeln('Done! :D');
     }
 
+    /**
+     *
+     */
     protected function showFinalMessage()
     {
         $this->logger->newline();
@@ -190,6 +233,11 @@ class InitCommand extends Command
         $this->logger->writeln('You can run `gulp` for development or `gulp --production` to build.');
     }
 
+    /**
+     * @param null $path
+     * @return bool
+     * @throws Exception
+     */
     public function execute($path = null)
     {
         if (!$this->checkEnv()) {
@@ -207,6 +255,10 @@ class InitCommand extends Command
         return true;
     }
 
+    /**
+     * @param $source
+     * @param $dest
+     */
     public function copy($source, $dest)
     {
         @mkdir($dest, 0755);
@@ -224,6 +276,10 @@ class InitCommand extends Command
         }
     }
 
+    /**
+     * @param $source
+     * @param $newName
+     */
     public function rename($source, $newName)
     {
         $fullName = dirname($source) . '/' . $newName;
