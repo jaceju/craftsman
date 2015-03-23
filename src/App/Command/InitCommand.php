@@ -230,7 +230,7 @@ class InitCommand extends Command
         $initMessage = file_get_contents(__DIR__ . '/../../messages/init.txt');
         $this->logger->info($this->formatter->format($initMessage, 'yellow'));
 
-        $this->logger->writeln('You can run `gulp` for development or `gulp --production` to build.');
+        $this->logger->writeln('You can run `gulp` for development or `gulp --production` for build.');
     }
 
     /**

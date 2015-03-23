@@ -1,10 +1,6 @@
 # Craftsman
 
-Enhance your Laravel 5 project with bower, gulp, etc.
-
-It is replacement for the elixir.
-
-Powered by [jaceju/clitool-boilerplate](https://github.com/jaceju/clitool-boilerplate)
+Enhance Laravel 5 Elixir tasks.
 
 ## Integration
 
@@ -52,7 +48,11 @@ cd project-name
 craftsman init
 ```
 
-then you can run `gulp` to build or `gulp watch` for development.
+then you can run `gulp` for development or `gulp --production` for build.
+
+## Powered by
+
+[jaceju/clitool-boilerplate](https://github.com/jaceju/clitool-boilerplate)
 
 ## License
 
