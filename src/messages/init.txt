@@ -14,7 +14,7 @@
 <!-- bower:js -->
 <!-- endbower -->
 <!-- endbuild -->
-<script src="/scripts/index.js"></script>
+<script src="/js/index.js"></script>
 @else
 <script src="{{ elixir("js/vendor.js") }}"></script>
 <script src="{{ elixir("js/index.js")}}"></script>

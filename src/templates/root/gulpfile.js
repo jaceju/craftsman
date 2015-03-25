@@ -17,7 +17,9 @@ elixir(function (mix) {
         .sass('*.scss')
         .jshint()
         //.twig() // for prototype
-        .wiredep();
+        .wiredep({}, {
+            ignorePath: /(\..\/)*public/
+        });
 
     if (elixir.config.production) {
         mix.useref({src: false})
