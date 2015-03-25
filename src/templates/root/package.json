@@ -8,11 +8,12 @@
     "laravel-elixir-browser-sync": "*",
     "laravel-elixir-clean": "*",
     "laravel-elixir-codeception": "*",
-    "laravel-elixir-serve": "*",
     "laravel-elixir-jshint": "*",
+    "laravel-elixir-serve": "*",
     "laravel-elixir-style-guide": "*",
-    "laravel-elixir-useref": "*",
+    "laravel-elixir-sync": "*",
     "laravel-elixir-twig": "*",
+    "laravel-elixir-useref": "*",
     "laravel-elixir-wiredep": "*"
   }
 }

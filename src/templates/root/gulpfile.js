@@ -5,6 +5,7 @@ require('laravel-elixir-wiredep');
 require('laravel-elixir-useref');
 require('laravel-elixir-browser-sync');
 require('laravel-elixir-serve');
+require('laravel-elixir-sync');
 require('laravel-elixir-jshint');
 require('laravel-elixir-clean');
 require('laravel-elixir-style-guide');
@@ -15,11 +16,9 @@ elixir(function (mix) {
 
     mix.clean()
         .sass('*.scss')
+        .wiredep()
         .jshint()
-        //.twig() // for prototype
-        .wiredep({}, {
-            ignorePath: /(\..\/)*public/
-        });
+        .sync('resources/assets/js/**/*.js', 'public/js');
 
     if (elixir.config.production) {
         mix.useref({src: false})
