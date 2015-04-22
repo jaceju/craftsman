@@ -37,11 +37,11 @@ class SelfUpdateCommand extends Command
         $pharFile .= '.phar';
         list($vendor, $repository) = explode('/', Application::REPOSITORY);
         $url = sprintf('http://%s.github.io/%s/downloads/%s', $vendor, $repository, $pharFile);
-        $subject = shell_exec('curl -s -I ' . $url);
-        $matches = [];
-        if (preg_match('/Location: (.*)/', $subject, $matches)) {
-            $url = $matches[1];
-        }
+        // $subject = shell_exec('curl -s -I ' . $url);
+        // $matches = [];
+        // if (preg_match('/Location: (.*)/', $subject, $matches)) {
+        //     $url = $matches[1];
+        // }
         $this->logger->debug($url);
         $code = system("curl -# -L $url > $script");
         if(!($code == 0)) {
