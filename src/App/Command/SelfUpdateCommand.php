@@ -42,6 +42,7 @@ class SelfUpdateCommand extends Command
         if (preg_match('/Location: (.*)/', $subject, $matches)) {
             $url = $matches[1];
         }
+        $this->logger->debug($url);
         $code = system("curl -# -L $url > $script");
         if(!($code == 0)) {
             throw new RuntimeException('Update Failed', 1);
