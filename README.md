@@ -6,25 +6,20 @@ Enhance Laravel 5 Elixir tasks.
 
 * [Gulp](http://gulpjs.com/)
 * [Bower](http://bower.io/)
-* [Hologram](http://trulia.github.io/hologram/)
-* [Apidoc](http://apidocjs.com/)
-
 ## Requirement
 
 * Linux or OS X
 * PHP 5.4+
-* Ruby 1.9.3+
-* Gem Bundle 1.7.0+
 * Node 0.10.0+
 * npm 2.0.0+
 * Composer 1.0+
 
 ## Installation
 
+Add `~/.composer/vendor/bin/` to `PATH` environment variable first. Then can install the package by:
+
 ```bash
-curl -L -O https://jaceju.github.io/craftsman/downloads/craftsman.phar
-chmod +x craftsman.phar
-sudo mv craftsman.phar /usr/local/bin/craftsman
+composer global require jaceju/craftsman
 ```
 
 ## Usage
