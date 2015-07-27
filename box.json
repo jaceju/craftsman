@@ -6,14 +6,17 @@
     "finder": [
         {
             "name": "*.php",
+            "in": "vendor",
             "exclude": [
+                "vendor/bin",
+                "vendor/kherge",
+                "vendor/herrera-io",
                 "tests"
-            ],
-            "in": "vendor"
+            ]
         }
     ],
     "git-version": "package_version",
     "main": "src/bootstrap.php",
-    "output": "build/downloads/craftsman.phar",
+    "output": "bin/app.phar",
     "stub": true
 }

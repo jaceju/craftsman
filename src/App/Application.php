@@ -7,6 +7,7 @@ use CLIFramework\Application as CliApp;
 class Application extends CliApp
 {
     const NAME = 'Craftsman';
+    const BIN_NAME = 'craftsman';
     const VERSION = '@package_version@';
     const REPOSITORY = 'jaceju/craftsman';
 
